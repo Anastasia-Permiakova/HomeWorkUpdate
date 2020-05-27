@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[] args) {
         Logic logic = MainLogic.getInstance();
-        System.out.println("Vitame vas v pocasi scaneru!");
+        System.out.println("Vitame vas v PocasiScanner!");
         while(true) {
             System.out.println("1 - zobrazit data uložená v databázi");
             System.out.println("2 - vyhledat počasí");

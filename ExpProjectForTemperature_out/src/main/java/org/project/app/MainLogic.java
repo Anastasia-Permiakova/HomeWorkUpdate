@@ -118,7 +118,7 @@ public class MainLogic implements Logic{
             saveTemperature(city, localDateTime);
         } catch (Exception e) {
             //jestli cod 404
-            System.out.println("Данного города не существует, попробуйте снова");
+            System.out.println("Město neexistuje");
             return;
         }
         Model model = null;
@@ -171,7 +171,7 @@ public class MainLogic implements Logic{
             try {
                 model = loadTemperature(replace);
             } catch (IOException e) {
-                System.out.println("не удалось загрузить данные");
+                System.out.println("");
                 break;
             }
             //přidame model
