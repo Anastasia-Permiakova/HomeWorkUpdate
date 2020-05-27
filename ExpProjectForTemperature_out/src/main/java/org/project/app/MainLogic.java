@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * класс с главной логикой, содержит только статические методы
+ * trida s mainlogic, jen static methods
  */
 
 public class MainLogic implements Logic{
 
-    //Данный класс является singlton, т.е объект данногокласса можно создать только 1
+    //Trida je singlton
 
     private static MainLogic mainLogic;
 
@@ -32,29 +32,29 @@ public class MainLogic implements Logic{
         return mainLogic;
     }
 
-    //директория, где будут сохраняться данные
+    //soubor kde budou ulozena data
     private static final String DIRECTORY = "C:\\Users\\ASUS\\Desktop\\ProjectForTemperature2\\src\\main\\resources";
 
-    //нахождние файла с данными, где вместо s название города
+    //soubor s data, kde misto s - nazev města
     private static final String FILE_LOCATION = "C:\\Users\\ASUS\\Desktop\\ProjectForTemperature2\\src\\main\\resources\\%s.txt";
 
 
     /**
      *
-     * @param city название города
-     * @param localDateTime текущее время
-     * @throws Exception может выбрасывать ошибку, если что-то не так с потоками
+     * @param city nayev města
+     * @param localDateTime čas
+     * @throws Exception pokud meco nejde se stream muze vydat chybu
      */
-    //метод сохраняет данные в файл
+    //metoda ulozí data do souboru
     @Override
     public void saveTemperature(String city, LocalDateTime localDateTime) throws Exception {
-        //получение json строки из сети
+        //dostavani json string z internetu
         String jsonData = ControllerUtils.getJsonData(city);
-        //добавление текущего времени выполнения запроса
+        //pridani aktuálního času kdy imformaci vyhledavaly
         jsonData+="---"+localDateTime.toString();
-        //создание поток на сохранение данных
+        //vytvoreni FileOutputStream na skladani dat
         FileOutputStream fileOutputStream = new FileOutputStream(new File(String.format(FILE_LOCATION, city)), false);
-        //запись в файл
+        //skladani dat
         fileOutputStream.write(jsonData.getBytes());
         fileOutputStream.flush();
     }
@@ -62,17 +62,17 @@ public class MainLogic implements Logic{
 
     /**
      *
-     * @param city название горожа
-     * @return возвращает модель данных по городу
+     * @param city nazev mesta
+     * @return vrati model mesta
      * @throws IOException
      */
-    //метод загружает данные из файла
+    //metoda nahravaji data ze souboru
     @Override
     public Model loadTemperature(String city) throws IOException {
 
-        //Создание потока
+        //Vytvoreni streamu
         FileInputStream fileInputStream = new FileInputStream(new File(String.format(FILE_LOCATION, city)));
-        //чтение данных из файла в строку
+        //cteni dat ze souboru
 
 
         StringBuilder jsonData = new StringBuilder();
@@ -81,26 +81,26 @@ public class MainLogic implements Logic{
         while((read = fileInputStream.read()) != -1){
             jsonData.append((char) read);
         }
-        //разбиение на массив из 2 данных, 0 - это json данные по погоде, 1 - это время, когда эти данные были сохранены
+        //deli array na 2, 0 - json data o pocasi, 1 - čas kdy data byla uložena
         String[] split = jsonData.toString().split("---");
-        //Создание json объекта, использование библиотеки org.json
+        //vytvoření json object, použivání knihovny org.json
         JSONObject jsonObject = new JSONObject(split[0]);
-        //получение main json
+        //dostavaní main json
         JSONObject main = jsonObject.getJSONObject("main");
 
         Model model = new Model();
 
-        //добавление в model температуры, которая достается из main jsoN
+        //přidání do model teploty,kterou dostavame z main jsoN
 
         model.setTemp(Double.valueOf(main.get("temp").toString()));
 
-        //добавление названия города
+        //přidání nazvu města
         model.setCity(jsonObject.getString("name"));
 
-        //добавление температуры по ощущениям
+        //přidání teploty feels_like
         model.setFeels_like(Double.valueOf(main.get("feels_like").toString()));
 
-        //время создания файла
+        //čas vztvorení soubora
         model.setLocalDateTime(LocalDateTime.parse(split[1]));
 
         return model;
@@ -108,73 +108,73 @@ public class MainLogic implements Logic{
 
     /**
      *
-     * @param city названи города
-     * @param localDateTime время создания
+     * @param city nazev města
+     * @param localDateTime čas vztvorení
      */
     @Override
     public void updateAndWriteTemperature(String city, LocalDateTime localDateTime){
-        //пытаемся сохранить данные, если успешно, то продолжается выполнение метожа
+        //zkusim uložit soubor, pokud uspěšně, metoda jde dal
         try {
             saveTemperature(city, localDateTime);
         } catch (Exception e) {
-            //если был код 404
+            //jestli cod 404
             System.out.println("Данного города не существует, попробуйте снова");
             return;
         }
         Model model = null;
-        //пытаемся загрузить сохраненные данные
+        //zkusím nahrat ulozena data
         try {
             model = loadTemperature(city);
         } catch (IOException e) {
-            System.out.println("oups, не удалось загрузить данные");
+            System.out.println("oups, se nepodařilo načíst data");
             return;
         }
 
         //вывод заруженных данных
-        String s = "Температура в городе %s равна %s, по ощущениям: %s \n";
+        String s = "Teplota ve měste %s je %s, cití jako: %s \n";
 
         System.out.format(s, model.getCity(), model.getTemp(), model.getFeels_like());
     }
 
     /**
      *
-     * @return возвращает список сохраненных моделей
+     * @return vratí list uložených modelů
      */
     @Override
     public List<Model> getSavedModels() {
-        //используем метод Files.walk чтобы пройтись по файлам в папке
+        //použivame metodu Files.walk pro hledani ve souborech
         Stream<Path> walk = null;
         try {
             walk = Files.walk(new File(DIRECTORY).toPath());
         } catch (IOException e) {
-            System.out.println("oups, нет директории");
+            System.out.println("oups, directory neexistuje");
             return null;
         }
-        //собираем поток в список, сортируя его
+        //sbírame stream do collect a třídim
         List<Path> collect = walk.sorted(Comparator.comparing(Path::getFileName)).collect(Collectors.toList());
-        //удаляем 0 элемент, потому что это resources
+        //odstranim 0, protoze to je resources
         collect.remove(0);
-        //если оказался пуст, то данные не были сохранены
+        //pokud je prazdný, data nebyla uložena
         if(collect.isEmpty()){
-            System.out.println("Данные пока что не были записаны");
+            System.out.println("Nic ješte nebylo zapsané");
             return null;
         }
 
         List<Model> models = new ArrayList<>();
 
-        //проходимся в цикле по сохраненным файлам
+        //pomoci for jdeme pres uložene soubory
         for(Path path:collect){
-            //убираем разрешение .txt
+            //odstraním .txt
             String replace = path.getFileName().toString().replace(".txt", "");
             Model model = null;
-            //пытаемся загрузить данные из файла
+            //Zkusim nahrat data ze souboru
             try {
                 model = loadTemperature(replace);
             } catch (IOException e) {
                 System.out.println("не удалось загрузить данные");
                 break;
             }
-            //добавляем модель в список
+            //přidame model
             models.add(model);
         }
         return models;
@@ -182,14 +182,14 @@ public class MainLogic implements Logic{
 
     /**
      *
-     * @param models список моделей
+     * @param models list models
      */
     @Override
     public void printModels(List<Model> models){
-            //сортируем по температуре, и проходимся в цикле по моделям и выводим сообщения на экран
+            //tridim podle teploty od nejchladnejšiho, pres for jdeme v modely a piseme to do terminalu
             models.sort(Comparator.comparing(Model::getTemp));
             for (Model model:models){
-                String format = "Сохраненные данные, температура в городе %s равна %s, по ощущениям %s, %s \n";
+                String format = "Uložená data, teplota ve městě %s se rovná %s, ale cití se to jeko %s, %s \n";
                 System.out.format(format, model.getCity(), model.getTemp(), model.getFeels_like(), model.getLastUpdate());
             }
     }

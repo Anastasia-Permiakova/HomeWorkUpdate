@@ -14,11 +14,11 @@ public class Main {
 
     public static void main(String[] args) {
         Logic logic = MainLogic.getInstance();
-        System.out.println("Добро пожаловать в сканер погоды!");
+        System.out.println("Vitame vas v pocasi scaneru!");
         while(true) {
-            System.out.println("Нажмите 1 для того, чтобы вывести на экран данные, сохраненные в базе");
-            System.out.println("Нажмите 2 для того, чтобы найти погоду в городе");
-            System.out.println("Нажмите 9, чтобы выйти");
+            System.out.println("1 - zobrazit data uložená v databázi");
+            System.out.println("2 - vyhledat počasí");
+            System.out.println("9 - exit");
             int i = in.nextInt();
             switch (i) {
                 case 1:
@@ -26,19 +26,19 @@ public class Main {
                     if (savedModels!=null){
                         logic.printModels(savedModels);
                     } else {
-                        System.out.println("Сохраненных нет");
+                        System.out.println("");
                     }
                     break;
                 case 2:
-                    System.out.println("Введите нзвание города: ");
+                    System.out.println("Ukaž město: ");
                     String city = in.next();
                     logic.updateAndWriteTemperature(city, LocalDateTime.now());
                     break;
                 case 9:
-                    System.out.println("Завершение работы программы");
+                    System.out.println("Vypnutí programu");
                     System.exit(0);
                 default:
-                    System.out.println("Некорректный пункт");
+                    System.out.println("Neplatný vstup");
             }
         }
 

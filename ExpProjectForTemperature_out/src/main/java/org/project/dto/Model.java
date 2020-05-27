@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * класс data transfer object, не содержит особой логики, но хранит в себе данные
+ * třida data transfer object, chrani v sebe data
  */
 
 public class Model implements Serializable {
@@ -46,13 +46,13 @@ public class Model implements Serializable {
         return localDateTime;
     }
 
-    //вывод времени последнего обновления
+    //vypis casu lastUpdate
     public String getLastUpdate(){
         String localDateTime = getLocalDateTime().toString();
         String[] ts = localDateTime.split("T");
         String[] date = ts[0].split("-");
         String[] time = ts[1].split(":");
-        return "последнее обновление: "+date[2]+" "+date[1]+" "+date[0]+" в "+time[0]+" часов "+time[1]+" минут "+time[2]+" секунд";
+        return "Lastupdate: "+date[2]+" "+date[1]+" "+date[0]+" v "+time[0]+" hodin "+time[1]+" minut "+time[2]+" sec";
     }
 
     public void setLocalDateTime(LocalDateTime localDateTime) {
