@@ -6,26 +6,26 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 
-//класс для получения данных из сети
+//třida pro dastavani dat z internetu
 public class ControllerUtils {
 
     private ControllerUtils(){}
 
-    //openweather api, ссылка на запрос, где вместо s нужно подставить город
+    //openweather api, web kde misto s musim dat mesto
     private static final String DEFAULT_CONNECT = "https://api.openweathermap.org/data/2.5/weather?q=%s&&units=metric&&appid=ada41553a2ad1f904423c8b287507d37";
 
 
     /**
      *
-     * @param city название города
-     * @return json строка с данными
+     * @param city město
+     * @return json string
      * @throws Exception е
      */
-    //возвращает Json строку по погоде в городе
+    //vrati Json string s počasí ve městě
     public static String getJsonData(String city) throws Exception {
-        //Запрос на сервер openweather
+        //openweather url
         URL url = new URL(String.format(DEFAULT_CONNECT, city));
-        //Сканнер для считывание ответа
+        //Scanner na sčitani otpovědi
         Scanner in = new Scanner((InputStream) url.getContent());
         StringBuilder result = new StringBuilder();
         while (in.hasNext()){
@@ -36,9 +36,9 @@ public class ControllerUtils {
 
         JSONObject jsonObject = new JSONObject(string);
 
-        //если в сообщении код 404, то данного города не существует, тогда нужно сгенерировать  ошибку
+        //pokud je kod 404, to znamena, ze město neexistuje
         if(jsonObject.getInt("cod") == 404){
-            throw new IllegalArgumentException("Город не существует");
+            throw new IllegalArgumentException("Město neexistuje");
         }
 
         return result.toString();

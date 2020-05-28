@@ -33,10 +33,10 @@ public class MainLogic implements Logic{
     }
 
     //soubor kde budou ulozena data
-    private static final String DIRECTORY = "C:\\Users\\ASUS\\Desktop\\ProjectForTemperature2\\src\\main\\resources";
+    private static final String DIRECTORY = "C:\\Users\\ASUS\\Desktop\\gitfiles\\HomeWorkUpdate\\Anastasia_Permiakova_ALG2_sem_ProjectForTemperature\\src\\main\\resources";
 
     //soubor s data, kde misto s - nazev města
-    private static final String FILE_LOCATION = "C:\\Users\\ASUS\\Desktop\\ProjectForTemperature2\\src\\main\\resources\\%s.txt";
+    private static final String FILE_LOCATION = "C:\\Users\\ASUS\\Desktop\\gitfiles\\HomeWorkUpdate\\Anastasia_Permiakova_ALG2_sem_ProjectForTemperature\\src\\main\\resources\\%s.txt";
 
 
     /**
