@@ -2,6 +2,7 @@ package org.project.app;
 
 import org.json.JSONObject;
 import org.project.dto.Model;
+import org.project.utils.CompareTemp;
 import org.project.utils.ControllerUtils;
 
 import java.io.*;
@@ -9,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +21,8 @@ import java.util.stream.Stream;
 public class MainLogic implements Logic{
 
     //Trida je singlton
+    //регулярное выражение на паттерн времени, соответствует времени в формате yyyy-mm-ddThh:mm:ss.mm
+    private String timePattern = "\\d{4}\\-\\d{2}\\-\\d{2}T\\d{2}\\:\\d{2}\\:\\d{2}\\.\\d{0,16}";
 
     private static MainLogic mainLogic;
 
@@ -101,8 +105,11 @@ public class MainLogic implements Logic{
         model.setFeels_like(Double.valueOf(main.get("feels_like").toString()));
 
         //čas vztvorení soubora
-        model.setLocalDateTime(LocalDateTime.parse(split[1]));
-
+        if(Pattern.matches(timePattern,split[1])){
+            model.setLocalDateTime(LocalDateTime.parse(split[1]));
+        } else {
+            throw new IllegalArgumentException("incorrect time format");
+        }
         return model;
     }
 
@@ -187,7 +194,7 @@ public class MainLogic implements Logic{
     @Override
     public void printModels(List<Model> models){
             //tridim podle teploty od nejchladnejšiho, pres for jdeme v modely a piseme to do terminalu
-            models.sort(Comparator.comparing(Model::getTemp));
+            models.sort(new CompareTemp());
             for (Model model:models){
                 String format = "Uložená data, teplota ve městě %s se rovná %s, ale cití se to jeko %s, %s \n";
                 System.out.format(format, model.getCity(), model.getTemp(), model.getFeels_like(), model.getLastUpdate());
