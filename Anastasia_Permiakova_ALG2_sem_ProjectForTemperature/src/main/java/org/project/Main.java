@@ -15,34 +15,36 @@ public class Main {
     public static void main(String[] args) {
         Logic logic = MainLogic.getInstance();
         System.out.println("Vitame vas v PocasiScanner!");
-        while(true) {
+        while (true) {
             System.out.println("1 - zobrazit data uložená v databázi");
             System.out.println("2 - vyhledat počasí");
             System.out.println("9 - exit");
-            int i = in.nextInt();
-            switch (i) {
-                case 1:
-                    List<Model> savedModels = logic.getSavedModels();
-                    if (savedModels!=null){
-                        logic.printModels(savedModels);
-                    } else {
-                        System.out.println("");
-                    }
-                    break;
-                case 2:
-                    System.out.println("Ukaž město: ");
-                    String city = in.next();
-                    logic.updateAndWriteTemperature(city, LocalDateTime.now());
-                    break;
-                case 9:
-                    System.out.println("Vypnutí programu");
-                    System.exit(0);
-                default:
-                    System.out.println("Neplatný vstup");
+            try {
+                int i = in.nextInt();
+                switch (i) {
+                    case 1:
+                        List<Model> savedModels = logic.getSavedModels();
+                        if (savedModels != null) {
+                            logic.printModels(savedModels);
+                        } else {
+                            System.out.println("");
+                        }
+                        break;
+                    case 2:
+                        System.out.println("Ukaž město: ");
+                        String city = in.next();
+                        logic.updateAndWriteTemperature(city, LocalDateTime.now());
+                        break;
+                    case 9:
+                        System.out.println("Vypnutí programu");
+                        System.exit(0);
+                    default:
+                        System.out.println("Neplatný vstup");
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.err.println("Neplatný vstup!");
+                in.nextLine();
             }
         }
-
-
-
     }
 }

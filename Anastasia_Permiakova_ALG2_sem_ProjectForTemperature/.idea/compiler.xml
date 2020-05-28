@@ -9,6 +9,7 @@
         <module name="ExpProjectForTemperature" />
         <module name="ProjectForTemperature" />
         <module name="ExpProjectForTemperature_out" />
+        <module name="Anastasia_Permiakova_ALG2_sem_ProjectForTemperature" />
       </profile>
     </annotationProcessing>
   </component>
