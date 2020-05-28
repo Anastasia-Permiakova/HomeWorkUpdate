@@ -66,7 +66,7 @@ public class MainLogic implements Logic{
      * @return vrati model mesta
      * @throws IOException
      */
-    //metoda nahravaji data ze souboru
+    //metoda nacita data ze souboru
     @Override
     public Model loadTemperature(String city) throws IOException {
 
